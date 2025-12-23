@@ -25,11 +25,16 @@ load_dotenv(find_dotenv())
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['SECRET_KEY']
-
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError(
+        "SECRET_KEY environment variable is not set. "
+        "Set it in your environment or .env file before running the project."
+    )
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG_VALUE", "False").lower() in ("1", "true", "yes", "on")
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]"]
+ALLOWED_HOSTS = []
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
