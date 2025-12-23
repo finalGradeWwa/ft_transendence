@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(find_dotenv())
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['SECRET_KEY']
+
 SECRET_KEY = os.getenv("SECRET_KEY")
 if not SECRET_KEY:
     raise RuntimeError(
@@ -34,8 +34,18 @@ if not SECRET_KEY:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG_VALUE", "False").lower() in ("1", "true", "yes", "on")
 
-ALLOWED_HOSTS = []
-
+_allowed_hosts_env = os.getenv("ALLOWED_HOSTS", "")
+if _allowed_hosts_env:
+    ALLOWED_HOSTS = [h.strip() for h in _allowed_hosts_env.split(",") if h.strip()]
+else:
+    # Empty ALLOWED_HOSTS is acceptable for local development when DEBUG is True.
+    ALLOWED_HOSTS = []
+# Prevent running in production with an empty ALLOWED_HOSTS.
+if not DEBUG and not ALLOWED_HOSTS:
+    raise RuntimeError(
+        "ALLOWED_HOSTS is empty while DEBUG is False. "
+        "Set the ALLOWED_HOSTS environment variable before deploying to production."
+    )
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Application definition
