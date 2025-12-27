@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import (AbstractBaseUser,
  BaseUserManager, PermissionsMixin)
-from datetime import datetime
+from django.utils import timezone
 
 # Create your models here.
 
@@ -26,12 +26,11 @@ class User(AbstractBaseUser, PermissionsMixin):
  blank=True)
     username = models.CharField(max_length=50, unique=True,
  null=False, blank=False)
-    # password = models.CharField(max_length=128)
     email = models.EmailField(max_length=200, unique=True,
  null=False, blank=False)
     # Other fields
 
-    date_joined = models.DateTimeField(default=datetime.now)
+    date_joined = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
@@ -44,6 +43,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         symmetrical=True,
         help_text='Friendships are automatically mutual: if you add a user as a friend, they are also your friend.',
     )
+    bio = models.TextField(verbose_name="Biography", max_length=600, null=True, blank=True)
     objects = UserManager()
 
     USERNAME_FIELD = 'username'

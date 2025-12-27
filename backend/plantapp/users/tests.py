@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-import datetime
+
 # Create your tests here.
 
 User = get_user_model()
@@ -12,16 +12,16 @@ class UserModelTests(TestCase):
             username="testuser",
             email="test@example.com",
             password="strongpassword123",
-            # date_joined=datetime.datetime.now()
+            bio="hello! my name is User123!",
         )
 
         self.assertEqual(user.username, "testuser")
         self.assertEqual(user.email, "test@example.com")
         self.assertTrue(user.check_password("strongpassword123"))
-        # self.assertEqual(user.date_joined, datetime.date())
         self.assertTrue(user.is_active)
         self.assertFalse(user.is_staff)
         self.assertFalse(user.is_superuser)
+        self.assertEqual(user.bio, "hello! my name is User123!")
 
     def test_email_is_normalized(self):
         user = User.objects.create_user(
